@@ -1,13 +1,30 @@
 module Views exposing (view)
 
-import Html exposing (Html, text, div, h1, img)
-import Html.Attributes exposing (src)
-import Types exposing (Model, Msg(..))
+import Html exposing (Html, Attribute, div)
+import Html.Attributes exposing (..)
+import Types exposing (Model, Msg(..), Board, Cell(..))
 
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ img [ src "/logo.svg" ] []
-        , h1 [] [ text "Your Elm App is working!" ]
-        ]
+    div [ id "board" ] [ renderBoard model.board ]
+
+
+renderBoard : Board -> Html Msg
+renderBoard board =
+    let
+        cellClass col =
+            case col of
+                DeadCell ->
+                    "cell-dead"
+
+                LiveCell ->
+                    "cell-live"
+
+        rowHtml row =
+            List.map (\col -> div [ class (cellClass col) ] []) row
+
+        html =
+            List.map (\row -> div [ class "row" ] (rowHtml row)) board
+    in
+        div [] html

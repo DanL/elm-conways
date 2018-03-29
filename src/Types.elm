@@ -2,13 +2,17 @@ module Types exposing (..)
 
 
 type alias Model =
-    { board : List (List Cell)
+    { board : Board
     , liveCells : List CellAddress
     }
 
 
 type Msg
     = NoOp
+
+
+type alias Board =
+    List (List Cell)
 
 
 type Cell

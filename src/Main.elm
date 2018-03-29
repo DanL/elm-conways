@@ -2,7 +2,7 @@ module Main exposing (..)
 
 import Html exposing (Html)
 import Views exposing (view)
-import Types exposing (Model, Msg(..), Cell(DeadCell))
+import Types exposing (Model, Msg(..), Board, Cell(DeadCell))
 
 
 main : Program Never Model Msg
@@ -18,12 +18,12 @@ main =
 init : ( Model, Cmd Msg )
 init =
     { board = initialBoard
-    , liveCells = []
+    , liveCells = [ ( 5, 5 ), ( 5, 6 ) ]
     }
         ! []
 
 
-initialBoard : List (List Cell)
+initialBoard : Board
 initialBoard =
     let
         boardSize =

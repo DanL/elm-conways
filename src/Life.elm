@@ -1,7 +1,46 @@
-module Life exposing (liveNeighborCount)
+module Life exposing (cellStatus)
 
 import Set exposing (Set)
-import Types exposing (BoardSize, CellAddress, CellLocation, CellLocationX(..), CellLocationY(..))
+import Types
+    exposing
+        ( BoardSize
+        , Cell(..)
+        , CellAddress
+        , CellLocation
+        , CellLocationX(..)
+        , CellLocationY(..)
+        )
+
+
+cellStatus : BoardSize -> CellAddress -> List CellAddress -> Cell
+cellStatus boardSize currentCell liveCells =
+    let
+        cell =
+            cellAddressToCell liveCells currentCell
+
+        neighbors =
+            liveNeighborCount boardSize currentCell liveCells
+    in
+        case cell of
+            DeadCell ->
+                if neighbors == 3 then
+                    LiveCell
+                else
+                    DeadCell
+
+            LiveCell ->
+                if neighbors < 2 || neighbors > 3 then
+                    DeadCell
+                else
+                    LiveCell
+
+
+cellAddressToCell : List CellAddress -> CellAddress -> Cell
+cellAddressToCell liveCells cell =
+    if List.member cell liveCells then
+        LiveCell
+    else
+        DeadCell
 
 
 liveNeighborCount : BoardSize -> CellAddress -> List CellAddress -> Int

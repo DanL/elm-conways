@@ -3,6 +3,9 @@ module Main exposing (..)
 import Html exposing (Html)
 import Views exposing (view)
 import Life exposing (heatDeath, initialBoard, step)
+import Task exposing (Task)
+import Process
+import Time exposing (Time)
 import Types exposing (Model, Msg(..), Board, Cell(DeadCell), CellAddress)
 
 
@@ -35,12 +38,8 @@ update msg model =
         Step ->
             step model ! []
 
-        -- how can I sleep between cycles?
-        -- how do I recur?
         Run ->
-            case heatDeath model of
-                True ->
-                    model ! []
-
-                False ->
-                    step model ! []
+            if heatDeath model then
+                model ! []
+            else
+                step model ! [ Task.perform (\a -> Run) Time.now ]

@@ -1,17 +1,17 @@
 #board {
-  padding: 3px;
+  padding: 1px;
   background-color: #eee;
-  width: 160px;
+  width: 120px;
 }
 
 .row {
-  height: 16px;
+  line-height: 10px;
 }
 
 .cell-dead, .cell-live {
   width: 10px;
   height: 10px;
-  margin: 3px;
+  margin: 1px;
   display: inline-block;
 }
 
@@ -21,4 +21,8 @@
 
 .cell-live {
   background-color: blue;
+}
+
+#start {
+  margin-top: 5px;
 }

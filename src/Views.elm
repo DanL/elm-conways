@@ -1,30 +1,48 @@
 module Views exposing (view)
 
-import Html exposing (Html, Attribute, div)
+import Html exposing (Html, Attribute, div, text, button)
 import Html.Attributes exposing (..)
-import Types exposing (Model, Msg(..), Board, Cell(..))
+import Html.Events exposing (onClick)
+import Types exposing (Model, Msg(..), Board, Cell(..), CellAddress)
 
 
 view : Model -> Html Msg
 view model =
-    div [ id "board" ] [ renderBoard model.board ]
+    div []
+        [ div [ id "board" ] [ renderBoard model.board model.liveCells ]
+        , div [ id "start" ] [ button [ onClick Run ] [ text "Run!" ] ]
+        ]
 
 
-renderBoard : Board -> Html Msg
-renderBoard board =
+renderBoard : Board -> List CellAddress -> Html Msg
+renderBoard board liveCells =
     let
-        cellClass col =
-            case col of
+        cellType x y =
+            case List.member ( x, y ) liveCells of
+                False ->
+                    DeadCell
+
+                True ->
+                    LiveCell
+
+        cellClass x y =
+            case cellType x y of
                 DeadCell ->
                     "cell-dead"
 
                 LiveCell ->
                     "cell-live"
 
-        rowHtml row =
-            List.map (\col -> div [ class (cellClass col) ] []) row
+        cellHtml rowIndex cellIndex col =
+            div [ class (cellClass cellIndex rowIndex) ] []
+
+        mapCells rowIndex row =
+            List.indexedMap (cellHtml rowIndex) row
+
+        rowHtml rowIndex row =
+            div [ class "row" ] (mapCells rowIndex row)
 
         html =
-            List.map (\row -> div [ class "row" ] (rowHtml row)) board
+            List.indexedMap rowHtml board
     in
         div [] html

@@ -8,7 +8,7 @@ type alias Model =
 
 
 type Msg
-    = NoOp
+    = Run
 
 
 type alias Board =

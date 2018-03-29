@@ -43,4 +43,11 @@ initialBoard =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    model ! []
+    case msg of
+        Run ->
+            startGame model ! []
+
+
+startGame : Model -> Model
+startGame model =
+    model

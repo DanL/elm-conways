@@ -2,7 +2,8 @@ module Main exposing (..)
 
 import Html exposing (Html)
 import Views exposing (view)
-import Types exposing (Model, Msg(..), Board, Cell(DeadCell))
+import Life exposing (initialBoard, step)
+import Types exposing (Model, Msg(..), Board, Cell(DeadCell), CellAddress)
 
 
 main : Program Never Model Msg
@@ -18,36 +19,17 @@ main =
 init : ( Model, Cmd Msg )
 init =
     { board = initialBoard
-    , liveCells = [ ( 5, 5 ), ( 5, 6 ) ]
+    , liveCells =
+        [ ( 5, 5 )
+        , ( 6, 5 )
+        , ( 7, 5 )
+        ]
     }
         ! []
-
-
-initialBoard : Board
-initialBoard =
-    let
-        boardSize =
-            9
-
-        rows =
-            List.range 0 boardSize
-
-        cols =
-            List.range 0 boardSize
-
-        createCell =
-            \n -> DeadCell
-    in
-        List.map (\n -> List.map createCell cols) rows
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Run ->
-            startGame model ! []
-
-
-startGame : Model -> Model
-startGame model =
-    model
+        Step ->
+            step model ! []

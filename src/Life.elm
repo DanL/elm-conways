@@ -1,9 +1,11 @@
-module Life exposing (cellStatus)
+module Life exposing (initialBoard, step)
 
 import Set exposing (Set)
 import Types
     exposing
-        ( BoardSize
+        ( Model
+        , Board
+        , BoardSize
         , Cell(..)
         , CellAddress
         , CellLocation
@@ -12,8 +14,35 @@ import Types
         )
 
 
-cellStatus : BoardSize -> CellAddress -> List CellAddress -> Cell
-cellStatus boardSize currentCell liveCells =
+step : Model -> Model
+step model =
+    let
+        newLiveCells =
+            List.filterMap (cellStatus model.liveCells) allCellAddresses
+    in
+        { model | liveCells = newLiveCells }
+
+
+allCellAddresses : List CellAddress
+allCellAddresses =
+    let
+        rows =
+            List.range 0 boardSize
+
+        cols =
+            List.range 0 boardSize
+
+        createRow row =
+            List.map (createCell row) cols
+
+        createCell row col =
+            ( col, row )
+    in
+        List.concatMap createRow rows
+
+
+cellStatus : List CellAddress -> CellAddress -> Maybe CellAddress
+cellStatus liveCells currentCell =
     let
         cell =
             cellAddressToCell liveCells currentCell
@@ -24,15 +53,15 @@ cellStatus boardSize currentCell liveCells =
         case cell of
             DeadCell ->
                 if neighbors == 3 then
-                    LiveCell
+                    Just currentCell
                 else
-                    DeadCell
+                    Nothing
 
             LiveCell ->
                 if neighbors < 2 || neighbors > 3 then
-                    DeadCell
+                    Nothing
                 else
-                    LiveCell
+                    Just currentCell
 
 
 cellAddressToCell : List CellAddress -> CellAddress -> Cell
@@ -103,13 +132,13 @@ parseLocation boardSize ( cellX, cellY ) ( locX, locY ) =
             xIsValid && yIsValid
     in
         if isValid then
-            Just ( 0, 0 )
+            Just (locationToAddress ( cellX, cellY ) ( locX, locY ))
         else
             Nothing
 
 
-locationToAddress : ( CellLocationX, CellLocationY ) -> CellAddress -> CellAddress
-locationToAddress ( locX, locY ) ( cellX, cellY ) =
+locationToAddress : CellAddress -> ( CellLocationX, CellLocationY ) -> CellAddress
+locationToAddress ( cellX, cellY ) ( locX, locY ) =
     let
         newX =
             case locX of
@@ -134,3 +163,26 @@ locationToAddress ( locX, locY ) ( cellX, cellY ) =
                     cellY
     in
         ( newX, newY )
+
+
+boardSize : Int
+boardSize =
+    9
+
+
+initialBoard : Board
+initialBoard =
+    let
+        rows =
+            List.range 0 boardSize
+
+        cols =
+            List.range 0 boardSize
+
+        createRow row =
+            List.map createCell cols
+
+        createCell col =
+            DeadCell
+    in
+        List.map createRow rows

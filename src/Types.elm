@@ -8,11 +8,15 @@ type alias Model =
 
 
 type Msg
-    = Run
+    = Step
 
 
 type alias Board =
     List (List Cell)
+
+
+type alias BoardSize =
+    Int
 
 
 type Cell
@@ -43,7 +47,3 @@ type CellLocationY
     = Above
     | Below
     | Middle
-
-
-type alias BoardSize =
-    Int

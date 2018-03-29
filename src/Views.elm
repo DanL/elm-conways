@@ -10,7 +10,7 @@ view : Model -> Html Msg
 view model =
     div []
         [ div [ id "board" ] [ renderBoard model.board model.liveCells ]
-        , div [ id "start" ] [ button [ onClick Run ] [ text "Run!" ] ]
+        , div [ id "start" ] [ button [ onClick Step ] [ text "Run!" ] ]
         ]
 
 

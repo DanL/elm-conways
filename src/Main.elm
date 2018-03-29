@@ -2,7 +2,7 @@ module Main exposing (..)
 
 import Html exposing (Html)
 import Views exposing (view)
-import Life exposing (initialBoard, step)
+import Life exposing (heatDeath, initialBoard, step)
 import Types exposing (Model, Msg(..), Board, Cell(DeadCell), CellAddress)
 
 
@@ -24,6 +24,7 @@ init =
         , ( 6, 5 )
         , ( 7, 5 )
         ]
+    , prevLiveCells = []
     }
         ! []
 
@@ -33,3 +34,13 @@ update msg model =
     case msg of
         Step ->
             step model ! []
+
+        -- how can I sleep between cycles?
+        -- how do I recur?
+        Run ->
+            case heatDeath model of
+                True ->
+                    model ! []
+
+                False ->
+                    step model ! []

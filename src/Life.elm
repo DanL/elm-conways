@@ -1,4 +1,4 @@
-module Life exposing (initialBoard, step)
+module Life exposing (heatDeath, initialBoard, step)
 
 import Set exposing (Set)
 import Types
@@ -20,7 +20,22 @@ step model =
         newLiveCells =
             List.filterMap (cellStatus model.liveCells) allCellAddresses
     in
-        { model | liveCells = newLiveCells }
+        { model | liveCells = newLiveCells, prevLiveCells = model.liveCells }
+
+
+heatDeath : Model -> Bool
+heatDeath model =
+    let
+        current =
+            Set.fromList model.liveCells
+
+        prev =
+            Set.fromList model.prevLiveCells
+
+        diff =
+            Set.diff current prev
+    in
+        Set.size diff == 0
 
 
 allCellAddresses : List CellAddress
